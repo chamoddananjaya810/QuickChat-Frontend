@@ -1,62 +1,82 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { useColorScheme } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { lightColors, darkColors } from '../theme/colors';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createContext, useContext, useEffect, useState } from "react";
+import { ActivityIndicator, useColorScheme } from "react-native";
 
-// Define the shape of the context value
-interface ThemeContextType {
-  isDarkMode: boolean;
-  colors: typeof lightColors | typeof darkColors;
-  toggleTheme: () => void;
-}
+export type ThemeOption = "light" | "dark" | "system";
 
-// Create the context with a default value
-export const ThemeContext = createContext<ThemeContextType>({
-  isDarkMode: false,
-  colors: lightColors,
-  toggleTheme: () => {},
-});
+const THEME_KEY = "@app_color_scheme";
 
-// Create the provider component
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const deviceScheme = useColorScheme(); // 'light', 'dark', or 'null'
-  const [isDarkMode, setIsDarkMode] = useState(deviceScheme === 'dark');
+type ThemeContextType = {
+  preference: ThemeOption;
+  applied: "light" | "dark";
+  setPreference: (themeOption: ThemeOption) => Promise<void>;
+};
 
-  // Load the saved theme from AsyncStorage when the app starts
+const themeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export function ThemeContext({ children }: { children: React.ReactNode }) {
+  const colorScheme = useColorScheme(); // "light" | "dark" | null
+
+  const [preferenceState, setPreferenceState] = useState<ThemeOption>("system");
+  const [isReady, setReady] = useState(false);
+
+  // Load saved theme from AsyncStorage
   useEffect(() => {
     const loadTheme = async () => {
       try {
-        const savedTheme = await AsyncStorage.getItem('theme');
-        if (savedTheme !== null) {
-          setIsDarkMode(savedTheme === 'dark');
+        const savedTheme = await AsyncStorage.getItem(THEME_KEY);
+
+        if (savedTheme === "light" || savedTheme === "dark") {
+          setPreferenceState(savedTheme as ThemeOption);
+        } else {
+          setPreferenceState("system");
         }
       } catch (error) {
-        console.error('Failed to load theme from storage.', error);
+        console.warn("Failed to load theme: " + error);
+      } finally {
+        setReady(true);
       }
     };
+
     loadTheme();
   }, []);
 
-  // Function to toggle the theme and save the preference
-  const toggleTheme = async () => {
+  // Save theme preference
+  const setPreference = async (themeOption: ThemeOption) => {
     try {
-      const newTheme = !isDarkMode;
-      setIsDarkMode(newTheme);
-      await AsyncStorage.setItem('theme', newTheme ? 'dark' : 'light');
+      if (themeOption === "system") {
+        await AsyncStorage.removeItem(THEME_KEY);
+        setPreferenceState("system");
+      } else {
+        await AsyncStorage.setItem(THEME_KEY, themeOption);
+        setPreferenceState(themeOption);
+      }
     } catch (error) {
-      console.error('Failed to save theme to storage.', error);
+      console.warn("failed to save theme: " + error);
     }
   };
 
-  // Select the color palette based on the current theme mode
-  const colors = isDarkMode ? darkColors : lightColors;
+  if (!isReady) {
+    return <ActivityIndicator style={{ flex: 1 }} />;
+  }
 
   return (
-    <ThemeContext.Provider value={{ isDarkMode, colors, toggleTheme }}>
+    <themeContext.Provider
+      value={{
+        preference: preferenceState,
+        applied: colorScheme ?? "light",
+        setPreference,
+      }}
+    >
       {children}
-    </ThemeContext.Provider>
+    </themeContext.Provider>
   );
-};
+}
 
-// Custom hook for easier access to the theme context
-export const useTheme = () => useContext(ThemeContext);
+export function useTheme() {
+  const ctx = useContext(themeContext);
+  if (!ctx) {
+    throw new Error("useTheme must be used inside ThemeContext");
+  }
+  return ctx;
+}

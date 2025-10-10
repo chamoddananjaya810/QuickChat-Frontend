@@ -1,14 +1,14 @@
-
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import SplashScreen from "./src/screens/SplashScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
-import { ThemeProvider } from "./src/theme/ThemeContext";
+import { NavigationContainer, ThemeProvider } from "@react-navigation/native";
+import { ThemeContext } from "./src/theme/ThemeContext";
+import SingUpScreen from "./src/screens/SingUpScreen";
 
 export type RootStack = {
   SplashScreen: undefined;
-  // SingUpScreen: undefined;
+  SingUpScreen: undefined;
   // ContactScreen: undefined;
   // AvatarScreen: undefined;
   // SignInScreen: undefined;
@@ -26,20 +26,23 @@ const Stack = createNativeStackNavigator<RootStack>();
 
 export default function App() {
   return (
-    <ThemeProvider>
-          <NavigationContainer>
-      <Stack.Navigator initialRouteName="SplashScreen">
-      <Stack.Screen
-                name="SplashScreen"
-                component={SplashScreen}
-                options={{ headerShown: false }}
-              />
-      </Stack.Navigator>
+    <ThemeContext>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="SplashScreen">
+          <Stack.Screen
+            name="SplashScreen"
+            component={SplashScreen}
+            options={{ headerShown: false }}
+          />
 
-
-    </NavigationContainer>
-    </ThemeProvider>
-
+          <Stack.Screen
+            name="SingUpScreen"
+            component={SingUpScreen}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ThemeContext>
   );
 }
 
