@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   Image,
   KeyboardAvoidingView,
@@ -206,4 +207,20 @@ export default function SingUpScreen() {
       </KeyboardAvoidingView>
     </View>
   );
+=======
+import { Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+export default function  SingUpScreen(){
+return (
+
+
+    <SafeAreaView>
+        <Text>singup screen</Text>
+    </SafeAreaView>
+);
+
+
+
+>>>>>>> 853a62c1ccf16ba9c270e8f28a69449a506fc02f
 }
