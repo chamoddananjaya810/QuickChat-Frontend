@@ -1,4 +1,3 @@
-
 import React, {
   createContext,
   useContext,
@@ -24,14 +23,12 @@ export const WebSocketProvider: React.FC<{
   const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-if (socketRef.current && socketRef.current.readyState !== WebSocket.OPEN) {
-  return
-}
-
-
+    if (socketRef.current && socketRef.current.readyState !== WebSocket.OPEN) {
+      return;
+    }
 
     const socket = new WebSocket(
-      `wss://${process.env.EXPO_PUBLIC_WS_URL}/ChatApp/chat?userId=${userId}`
+      `wss://${process.env.EXPO_PUBLIC_WS_URL}/QuickChat-Backend/chat?userId=${userId}`
     );
     socketRef.current = socket;
     socket.onopen = () => {
@@ -64,10 +61,10 @@ if (socketRef.current && socketRef.current.readyState !== WebSocket.OPEN) {
     </WebSocketContext.Provider>
   );
 };
-export const useWebSocket=()=>{
-const ctx=useContext(WebSocketContext);
-if (!ctx) {
-  throw new Error("useWebScoket must be used inside WebSocketProvider");
-}
-return ctx;
-}
+export const useWebSocket = () => {
+  const ctx = useContext(WebSocketContext);
+  if (!ctx) {
+    throw new Error("useWebScoket must be used inside WebSocketProvider");
+  }
+  return ctx;
+};
