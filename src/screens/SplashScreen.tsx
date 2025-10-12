@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useEffect } from "react";
 import { StatusBar, Text, View, Dimensions } from "react-native";
 import Animated, {
@@ -160,18 +159,18 @@ export default function SplashScreen() {
       
       {/* Lighter Gradient Background */}
       <LinearGradient
-        colors={['#f0f9ff', '#e0f2fe', '#bae6fd']}
+        colors={['#e0f2fe', '#f0f9ff', '#dbeafe']}
         style={{ position: 'absolute', width: '100%', height: '100%' }}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
       />
 
-      {/* Animated Background Particles - More visible */}
+      {/* Animated Background Particles - Soft colors */}
       <CircleShape
         width={300}
         height={300}
         borderRadius={150}
-        fillColor="rgba(59, 130, 246, 0.15)"
+        fillColor="rgba(186, 230, 253, 0.4)"
         topValue={-100}
         leftValue={-100}
         animate={true}
@@ -182,7 +181,7 @@ export default function SplashScreen() {
         width={200}
         height={200}
         borderRadius={100}
-        fillColor="rgba(139, 92, 246, 0.15)"
+        fillColor="rgba(199, 210, 254, 0.35)"
         topValue={100}
         rightValue={-50}
         animate={true}
@@ -193,7 +192,7 @@ export default function SplashScreen() {
         width={250}
         height={250}
         borderRadius={125}
-        fillColor="rgba(236, 72, 153, 0.12)"
+        fillColor="rgba(186, 230, 253, 0.3)"
         bottomValue={-80}
         leftValue={width / 2 - 125}
         animate={true}
@@ -204,7 +203,7 @@ export default function SplashScreen() {
         width={150}
         height={150}
         borderRadius={75}
-        fillColor="rgba(34, 197, 94, 0.15)"
+        fillColor="rgba(167, 243, 208, 0.3)"
         bottomValue={150}
         rightValue={-40}
         animate={true}
@@ -221,11 +220,11 @@ export default function SplashScreen() {
                 width: 280,
                 height: 280,
                 borderRadius: 140,
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                backgroundColor: 'rgba(186, 230, 253, 0.4)',
                 position: 'absolute',
                 shadowColor: '#3b82f6',
                 shadowOffset: { width: 0, height: 0 },
-                shadowOpacity: 0.5,
+                shadowOpacity: 0.3,
                 shadowRadius: 40,
                 elevation: 10,
               },
@@ -235,7 +234,7 @@ export default function SplashScreen() {
 
           {/* Main Logo */}
           <Animated.Image
-            source={require("../../assets/logo.png")}
+            source={require("../../assets/quick.png")}
             style={[
               {
                 width: 220,
@@ -252,8 +251,8 @@ export default function SplashScreen() {
           className="absolute items-center w-full"
           style={[{ bottom: 120 }, textAnimatedStyle]}
         >
-          <Text className="text-5xl font-extrabold text-center text-slate-800">
-            quickchat
+          <Text className="text-5xl font-extrabold text-center text-slate-700">
+            chat
           </Text>
           
           {/* Decorative underline */}
@@ -274,7 +273,7 @@ export default function SplashScreen() {
           style={[{ bottom: 80 }, subtitleAnimatedStyle]}
         >
           <Text className="text-base font-medium text-center text-slate-600">
-            Connect instantly, chat effortlessly
+            Connect instantly, chat
           </Text>
         </Animated.View>
 
@@ -344,68 +343,3 @@ function LoadingDot({ delay }: { delay: number }) {
     />
   );
 }
-=======
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, StatusBar } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { getColors } from '../theme/colors'; // 
-import { useTheme } from '../theme/ThemeContext';
-import { RootStack } from '../../App';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-type props = NativeStackNavigationProp<RootStack, "SplashScreen">;
-export default function SplashScreen() {
-  const navigation = useNavigation<props>();
-  const { applied } = useTheme(); // ThemeProvider එකෙන් `applied` theme එක ලබාගන්නවා.
-  const colors = getColors(applied); // `applied` theme එක අනුව colors ලබාගන්නවා.
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
- navigation.replace('SingUpScreen'); 
-    }, 2500); 
-
-    return () => clearTimeout(timer); 
-  }, [navigation]);
-
-  return (
- 
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
- 
-      <StatusBar barStyle={colors.statusBar} backgroundColor={colors.background} />
-
-      <Text style={[styles.appTitle, { color: colors.primary }]}>
-        Quick Chat
-      </Text>
-      <Text style={[styles.slogan, { color: colors.text }]}>
-        Connect. Share. Explore.
-      </Text>
-
-     
-      <ActivityIndicator size="large" color={colors.primary} style={styles.activityIndicator} />
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  appTitle: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  slogan: {
-    fontSize: 18,
-    fontStyle: 'italic',
-    marginBottom: 40,
-  },
-  activityIndicator: {
-    marginTop: 50,
-  },
-});
->>>>>>> 853a62c1ccf16ba9c270e8f28a69449a506fc02f

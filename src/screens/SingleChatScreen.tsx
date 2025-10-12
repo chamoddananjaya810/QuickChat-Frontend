@@ -5,6 +5,8 @@ import { RootStack } from "../../App";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useLayoutEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from 'expo-linear-gradient';
+import { AppColors } from '../../theme/colors';
 
 type Message = {
   id: number;
@@ -21,7 +23,7 @@ type SingelChatScreenProps = NativeStackScreenProps<
 >;
 
 
- export default function SingelChatScreen({route,navigation}:SingelChatScreenProps) {
+export default function SingelChatScreen({route,navigation}:SingelChatScreenProps) {
   const {chatId,friendName,lastSeenTime,profileImage}=route.params;
   const [messages, setMessages] = useState<Message[]>([
     { 
@@ -54,21 +56,39 @@ type SingelChatScreenProps = NativeStackScreenProps<
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "",
+      headerStyle: {
+        backgroundColor: AppColors.background.gradient1,
+      },
       headerLeft: () => (
         <View className="flex-row items-center">
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color="#000" />
+            <Ionicons name="arrow-back" size={24} color={AppColors.text.primary} />
           </TouchableOpacity>
           <Image
             source={require("../../assets/avatar/avatar_2.png")}
-            className="w-10 h-10 ml-2 rounded-full"
+            style={{
+              width: 40,
+              height: 40,
+              marginLeft: 8,
+              borderRadius: 20,
+              borderWidth: 2,
+              borderColor: AppColors.input.border,
+            }}
           />
         </View>
       ),
       headerRight: () => (
         <View className="mr-4">
-          <Text className="text-lg font-bold">{friendName}</Text>
-          <Text className="text-xs italic text-green-500">
+          <Text 
+            className="text-lg font-bold"
+            style={{ color: AppColors.text.primary }}
+          >
+            {friendName}
+          </Text>
+          <Text 
+            className="text-xs italic"
+            style={{ color: AppColors.button.primaryBg }}
+          >
             Last seen today at {lastSeenTime}
           </Text>
         </View>
@@ -147,15 +167,42 @@ type SingelChatScreenProps = NativeStackScreenProps<
     return (
       <>
         <View
-          className={`my-1 px-4 py-2 max-w-[75%] ${
-            isMe
-              ? 'rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl self-end bg-green-600'
-              : 'rounded-tl-2xl rounded-tr-2xl rounded-br-2xl self-start bg-gray-700'
-          }`}
+          style={{
+            marginVertical: 4,
+            paddingHorizontal: 16,
+            paddingVertical: 10,
+            maxWidth: '75%',
+            alignSelf: isMe ? 'flex-end' : 'flex-start',
+            backgroundColor: isMe ? AppColors.button.primaryBg : AppColors.input.background,
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+            borderBottomLeftRadius: isMe ? 16 : 4,
+            borderBottomRightRadius: isMe ? 4 : 16,
+            shadowColor: AppColors.shadow.light,
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.2,
+            shadowRadius: 4,
+            elevation: 2,
+            borderWidth: isMe ? 0 : 2,
+            borderColor: isMe ? 'transparent' : AppColors.input.border,
+          }}
         >
-          <Text className="text-base text-white">{item.text}</Text>
+          <Text 
+            className="text-base"
+            style={{ color: isMe ? AppColors.button.primaryText : AppColors.text.primary }}
+          >
+            {item.text}
+          </Text>
           <View className="flex-row items-center justify-end gap-1 mt-1">
-            <Text className="text-xs text-white opacity-70">{item.time}</Text>
+            <Text 
+              className="text-xs"
+              style={{ 
+                color: isMe ? AppColors.button.primaryText : AppColors.text.secondary,
+                opacity: 0.7 
+              }}
+            >
+              {item.time}
+            </Text>
             {isMe && (
               <Ionicons 
                 name={
@@ -166,7 +213,7 @@ type SingelChatScreenProps = NativeStackScreenProps<
                     : "checkmark"
                 }
                 size={14}
-                color={item.status === "read" ? "#3b82f6" : "#fff"}
+                color={item.status === "read" ? "#3b82f6" : AppColors.button.primaryText}
               />
             )}
           </View>
@@ -174,8 +221,22 @@ type SingelChatScreenProps = NativeStackScreenProps<
         
         {showDateSeparator && (
           <View className="items-center my-3">
-            <View className="px-3 py-1 bg-gray-200 rounded-full">
-              <Text className="text-xs text-gray-600">{formatDate(item.date)}</Text>
+            <View 
+              style={{
+                paddingHorizontal: 12,
+                paddingVertical: 4,
+                backgroundColor: AppColors.input.background,
+                borderRadius: 20,
+                borderWidth: 2,
+                borderColor: AppColors.input.border,
+              }}
+            >
+              <Text 
+                className="text-xs"
+                style={{ color: AppColors.text.secondary }}
+              >
+                {formatDate(item.date)}
+              </Text>
             </View>
           </View>
         )}
@@ -184,41 +245,91 @@ type SingelChatScreenProps = NativeStackScreenProps<
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+    <View style={{ flex: 1 }}>
       <StatusBar hidden={false} barStyle="dark-content" />
-      <KeyboardAvoidingView 
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-      >
-        <FlatList 
-          data={messages} 
-          renderItem={renderItem} 
-          keyExtractor={(item) => item.id.toString()}
-          className="px-3"
-          contentContainerStyle={{ paddingVertical: 10 }}
-          inverted={true}
-          keyboardShouldPersistTaps="handled"
-        />
-        
-        <View className="flex-row items-end gap-2 p-3 bg-white border-t border-gray-200">
-          <TextInput 
-            value={input} 
-            onChangeText={setInput} 
-            multiline  
-            placeholder="Type a message" 
-            className="flex-1 px-4 py-3 text-base bg-gray-100 min-h-[50px] max-h-24 rounded-3xl"
-            style={{ textAlignVertical: 'center' }}
+      
+      {/* Gradient Background */}
+      <LinearGradient
+        colors={[
+          AppColors.background.gradient1,
+          AppColors.background.gradient2,
+          AppColors.background.gradient3,
+        ]}
+        style={{ position: 'absolute', width: '100%', height: '100%' }}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      />
+
+      <SafeAreaView style={{ flex: 1 }}>
+        <KeyboardAvoidingView 
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+        >
+          <FlatList 
+            data={messages} 
+            renderItem={renderItem} 
+            keyExtractor={(item) => item.id.toString()}
+            className="px-3"
+            contentContainerStyle={{ paddingVertical: 10 }}
+            inverted={true}
+            keyboardShouldPersistTaps="handled"
           />
-          <TouchableOpacity 
-            onPress={sendMessage}
-            className="items-center justify-center w-12 h-12 bg-green-600 rounded-full"
-            activeOpacity={0.7}
+          
+          <View 
+            style={{
+              flexDirection: 'row',
+              alignItems: 'flex-end',
+              gap: 8,
+              padding: 12,
+              backgroundColor: AppColors.input.background,
+              borderTopWidth: 2,
+              borderTopColor: AppColors.input.border,
+            }}
           >
-            <Ionicons name="send" size={20} color="white" />
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            <TextInput 
+              value={input} 
+              onChangeText={setInput} 
+              multiline  
+              placeholder="Type a message" 
+              placeholderTextColor={AppColors.input.placeholder}
+              style={{
+                flex: 1,
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                fontSize: 16,
+                backgroundColor: 'white',
+                minHeight: 50,
+                maxHeight: 96,
+                borderRadius: 25,
+                textAlignVertical: 'center',
+                color: AppColors.input.text,
+                borderWidth: 2,
+                borderColor: AppColors.input.border,
+              }}
+            />
+            <TouchableOpacity 
+              onPress={sendMessage}
+              style={{
+                width: 48,
+                height: 48,
+                backgroundColor: AppColors.button.primaryBg,
+                borderRadius: 24,
+                justifyContent: 'center',
+                alignItems: 'center',
+                shadowColor: AppColors.shadow.colored,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.3,
+                shadowRadius: 6,
+                elevation: 4,
+              }}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="send" size={20} color={AppColors.button.primaryText} />
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </View>
   );
 }

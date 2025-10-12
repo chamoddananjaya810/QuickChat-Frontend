@@ -11,69 +11,130 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import "../../global.css";
 import { AntDesign } from "@expo/vector-icons";
-import { useState } from "react";
-// Import your CountryPicker component
+import { useState, useEffect } from "react";
 import CountryPicker, {
   Country,
   CountryCode,
-} from "react-native-country-picker-modal"; // or wherever your CountryPicker comes from
+} from "react-native-country-picker-modal";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStack } from "../../App";
 import { useNavigation } from "@react-navigation/native";
 import { useUserRegistaion } from "../components/UserContext";
 import { validateCountryCode, validatePhoneNo } from "../util/Validation";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import { LinearGradient } from 'expo-linear-gradient';
+import { AppColors } from '../../theme/colors';
 
 type ContactProps = NativeStackNavigationProp<RootStack, "ContactScreen">;
-// Define the CountryItem interface
-interface CountryItem {
-  name: string;
-  code: string;
-  flag: string;
-  // Add other properties as needed
+
+// Country type එක extend කරන්න
+interface ExtendedCountry extends Country {
+  flag?: string;
+  name?: string;
 }
 
 export default function ContactScreen() {
   const navigation = useNavigation<ContactProps>();
 
-  // const [show, setShow] = useState(false);
-  // const [countryCode, setCountryCode] = useState<CountryItem | null>(null);
   const [countryCode, setCountryCode] = useState<CountryCode>("LK");
-  const [country, setCountry] = useState<Country | null>(null);
+  const [country, setCountry] = useState<ExtendedCountry | null>(null);
   const [show, setShow] = useState<boolean>(false);
   const { userData, setUserData } = useUserRegistaion();
 
   const [callingCode, setCallingCode] = useState("+94");
   const [phoneNo, setPhoneNo] = useState("");
+
+  // Default country set කරන්න
+  useEffect(() => {
+    const defaultCountry: ExtendedCountry = {
+      cca2: 'LK',
+      name: 'Sri Lanka',
+      flag: '🇱🇰',
+      callingCode: ['+94'],
+    } as ExtendedCountry;
+    
+    if (!country) {
+      setCountry(defaultCountry);
+    }
+  }, []);
+
   return (
-    <SafeAreaView className="flex-1 bg-red-100 items-center">
+    <View className="flex-1">
       <StatusBar hidden={true} />
+      
+      {/* Gradient Background */}
+      <LinearGradient
+        colors={[
+          AppColors.background.gradient1,
+          AppColors.background.gradient2,
+          AppColors.background.gradient3,
+        ]}
+        style={{ position: 'absolute', width: '100%', height: '100%' }}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      />
+
       <KeyboardAvoidingView
         behavior={Platform.OS === "android" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "android" ? 100 : 100}
         className="flex-1"
       >
-        <View className="p-5 items-center">
-          <View className="mb-8">
-            <Image
-              source={require("../../assets/logo.png")}
-              className="h-40 w-36 mb-4"
-            />
-            <Text className="text-slate-600 font-bold text-center">
-              We use your contacts to help you find friends who are already on
-              the app. Your contacts stay private.
-            </Text>
-          </View>
+        <SafeAreaView className="items-center flex-1">
+          <View className="items-center p-5">
+            {/* Logo & Description */}
+            <View className="mb-8">
+              <Image
+                source={require("../../assets/quick.png")}
+                className="h-40 mb-4 w-36"
+              />
+              <Text 
+                className="font-bold text-center"
+                style={{ color: AppColors.text.secondary }}
+              >
+                We use your contacts to help you find friends who are already on
+                the app. Your contacts stay private.
+              </Text>
+            </View>
 
-          <View className="w-full">
-            <View className="border-b-2 border-b-green-600 justify-center items-center flex-row h-14 mb-3">
-              {" "}
+            {/* Country Picker */}
+            <View className="w-full">
+              <Pressable 
+                onPress={() => setShow(true)}
+                style={{
+                  backgroundColor: AppColors.input.background,
+                  borderWidth: 2,
+                  borderColor: AppColors.input.border,
+                  borderRadius: 16,
+                  paddingHorizontal: 16,
+                  paddingVertical: 16,
+                  shadowColor: AppColors.shadow.light,
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 1,
+                  shadowRadius: 8,
+                  elevation: 2,
+                  marginBottom: 16,
+                }}
+                className="flex-row items-center justify-center"
+              >
+                <Text 
+                  className="mr-2 text-lg font-bold"
+                  style={{ color: AppColors.text.primary }}
+                >
+                  {country?.flag ? String(country.flag) : '🇱🇰'} {country?.name ? String(country.name) : 'Sri Lanka'}
+                </Text>
+                <AntDesign 
+                  name="caret-down" 
+                  size={16} 
+                  color={AppColors.text.primary} 
+                />
+              </Pressable>
+              
               <CountryPicker
                 countryCode={countryCode}
                 withFilter
                 withFlag
-                withCountryNameButton
                 withCallingCode
+                withCallingCodeButton={false}
                 visible={show}
                 onClose={() => {
                   setShow(false);
@@ -82,74 +143,138 @@ export default function ContactScreen() {
                   setCountryCode(c.cca2);
                   setCountry(c);
                   setShow(false);
+                  
+                  const selectedCallingCode = Array.isArray(c.callingCode) 
+                    ? c.callingCode[0] 
+                    : c.callingCode;
+                  
+                  setCallingCode(`+${selectedCallingCode}`);
                   setUserData((previous) => ({
                     ...previous,
-                    countryCode: "+" + String(c.callingCode),
+                    countryCode: `+${selectedCallingCode}`,
                   }));
                 }}
               />
-              <AntDesign name="caret-down" size={16} color="black" />
+            </View>
+
+            {/* Phone Number Inputs */}
+            <View className="flex flex-row justify-center w-full mt-2">
+              {/* Country Code Input */}
+              <TextInput
+                inputMode="tel"
+                style={{
+                  backgroundColor: AppColors.input.background,
+                  borderWidth: 2,
+                  borderColor: AppColors.input.border,
+                  borderTopLeftRadius: 16,
+                  borderBottomLeftRadius: 16,
+                  paddingHorizontal: 12,
+                  color: AppColors.input.text,
+                  fontSize: 16,
+                  fontWeight: '500',
+                  shadowColor: AppColors.shadow.light,
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 1,
+                  shadowRadius: 8,
+                  elevation: 2,
+                }}
+                className="w-1/4 h-16"
+                placeholder="+94"
+                placeholderTextColor={AppColors.input.placeholder}
+                value={callingCode}
+                onChangeText={(text) => {
+                  setCallingCode(text);
+                }}
+              />
+
+              {/* Phone Number Input */}
+              <TextInput
+                inputMode="tel"
+                style={{
+                  backgroundColor: AppColors.input.background,
+                  borderWidth: 2,
+                  borderColor: AppColors.input.border,
+                  borderTopRightRadius: 16,
+                  borderBottomRightRadius: 16,
+                  paddingHorizontal: 12,
+                  color: AppColors.input.text,
+                  fontSize: 16,
+                  fontWeight: '500',
+                  shadowColor: AppColors.shadow.light,
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 1,
+                  shadowRadius: 8,
+                  elevation: 2,
+                  marginLeft: 8,
+                }}
+                className="w-3/4 h-16"
+                placeholder="77 #### ###"
+                placeholderTextColor={AppColors.input.placeholder}
+                value={phoneNo}
+                onChangeText={(text) => {
+                  setPhoneNo(text);
+                }}
+              />
+            </View>
+
+            {/* Next Button */}
+            <View className="w-full mt-6">
+              <Pressable
+                className="items-center justify-center"
+                style={{
+                  backgroundColor: AppColors.button.primaryBg,
+                  borderRadius: 16,
+                  paddingVertical: 14,
+                  paddingHorizontal: 20,
+                  shadowColor: AppColors.shadow.colored,
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 1,
+                  shadowRadius: 12,
+                  elevation: 5,
+                }}
+                onPress={() => {
+                  const validateCountry = validateCountryCode(callingCode);
+                  const validPhoneNo = validatePhoneNo(phoneNo);
+                  
+                  if (validateCountry) {
+                    Toast.show({
+                      type: ALERT_TYPE.INFO,
+                      title: "Warning",
+                      textBody: validateCountry,
+                    });
+                  } else if (validPhoneNo) {
+                    Toast.show({
+                      type: ALERT_TYPE.INFO,
+                      title: "Warning",
+                      textBody: validPhoneNo,
+                    });
+                  } else {
+                    setUserData((previous) => ({
+                      ...previous,
+                      countryCode: callingCode,
+                      contactNo: phoneNo,
+                    }));
+
+                    navigation.replace("AvatarScreen");
+                  }
+                }}
+                android_ripple={{ color: AppColors.button.primaryHover }}
+              >
+                <Text 
+                  style={{ 
+                    color: AppColors.button.primaryText,
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    lineHeight: 24,
+                  }}
+                >
+                  Next
+                </Text>
+              </Pressable>
             </View>
           </View>
-
-          <View className="mt-2 bg-red-100 flex flex-row justify-center ">
-            <TextInput
-              inputMode="tel"
-              className="h-16  font-bold text-lg border-y-4 border-y-green-600 w-1/6 me-1"
-              placeholder="+94"
-              value={country ? `${country.callingCode}` : callingCode}
-              onChangeText={(text) => {
-                setCallingCode(text);
-              }}
-            />
-
-            <TextInput
-              inputMode="tel"
-              className="h-16  font-bold text-lg border-y-4 border-y-green-600  w-5/6 ps-1"
-              placeholder="77 #### ###"
-              onChangeText={(text) => {
-                setPhoneNo(text);
-              }}
-            />
-          </View>
-          <View className="mt-3">
-            <Pressable
-              className="justify-center items-center border-y-green-600 w-full h-14 rounded-full"
-              onPress={() => {
-                const validateCountry = validateCountryCode(callingCode);
-                const validPhoneNo = validatePhoneNo(phoneNo);
-                if (validateCountry) {
-                  Toast.show({
-                    type: ALERT_TYPE.WARNING,
-                    title: "Warning",
-                    textBody: validateCountry,
-                  });
-                } else if (validPhoneNo) {
-                  Toast.show({
-                    type: ALERT_TYPE.WARNING,
-                    title: "Warning",
-                    textBody: validPhoneNo,
-                  });
-                } else {
-                  setUserData((previous) => ({
-                    ...previous,
-                    countryCode: country
-                      ? `+${country.callingCode}`
-                      : callingCode,
-                    contactNo: phoneNo,
-                  }));
-
-                  navigation.replace("AvatarScreen");
-                }
-              }}
-            >
-              <Text className="text-2xl font-bold border-y-green-600">
-                Next
-              </Text>
-            </Pressable>
-          </View>
-        </View>
+        </SafeAreaView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }

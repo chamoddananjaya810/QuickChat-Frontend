@@ -1,12 +1,10 @@
 {
   "expo": {
-<<<<<<< HEAD
+
     "name": "quick chat",
     "slug": "quick-chat",
-=======
-    "name": "QuickChat-Frontend",
-    "slug": "QuickChat-Frontend",
->>>>>>> 853a62c1ccf16ba9c270e8f28a69449a506fc02f
+
+    
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,10 +26,7 @@
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
-<<<<<<< HEAD
-=======
 
->>>>>>> 853a62c1ccf16ba9c270e8f28a69449a506fc02f
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"

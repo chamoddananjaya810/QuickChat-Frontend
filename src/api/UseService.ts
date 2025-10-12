@@ -1,6 +1,6 @@
 import { UserRegistationData } from "../components/UserContext";
 
-const API = process.env.EXPO_PUBLIC_APP_URL + "/ChatApp";
+const API = process.env.EXPO_PUBLIC_APP_URL + "/QuickChat-Backend";
 
 export const createNewAccount = async (userData: UserRegistationData) => {
   try {

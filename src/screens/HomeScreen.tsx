@@ -14,12 +14,14 @@ import { useLayoutEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useChatList } from "../socket/UseChat";
+import { LinearGradient } from 'expo-linear-gradient';
+import { AppColors } from '../../theme/colors';
 
 const chats = [
   {
     id: 1,
     name: "Sahan Perera",
-    LastMessage: "hello,Sahan",
+    lastMessage: "hello,Sahan",
     time: "9:46",
     unread: 2,
     profile: require("../../assets/avatar/avatar_2.png"),
@@ -27,7 +29,7 @@ const chats = [
   {
     id: 2,
     name: "amal Perera",
-    message: "hello,amal ",
+    lastMessage: "hello,amal ",
     time: "yesterday",
     unread: 2,
     profile: require("../../assets/avatar/avatar_4.png"),
@@ -35,7 +37,7 @@ const chats = [
   {
     id: 3,
     name: "rashni Perera",
-    lastmessage: "hello,rashni",
+    lastMessage: "hello,rashni",
     time: "9:46",
     unread: 2,
     profile: require("../../assets/avatar/avatar_3.png"),
@@ -43,41 +45,38 @@ const chats = [
   {
     id: 4,
     name: "asanki Perera",
-    lastmessage: "hello,asanki",
+    lastMessage: "hello,asanki",
     time: "2025/02/22 pm",
     unread: 0,
     profile: require("../../assets/avatar/avatar_5.png"),
   },
 ];
 
-
-
-
-
-
 type HomeScreenProps = NativeStackNavigationProp<RootStack, "HomeScreen">;
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenProps>();
-
-
-  
   const [search, setSearch] = useState("");
-
-const chatlist=useChatList();
+  const chatlist = useChatList();
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "ChatApp",
-      headerTitleStyle: { fontWeight: "bold" },
+      headerTitleStyle: { 
+        fontWeight: "bold",
+        color: AppColors.text.primary,
+      },
+      headerStyle: {
+        backgroundColor: AppColors.background.gradient1,
+      },
       headerRight: () => (
-        <View className="flex-row items-center py-2 my-1 space-x-4 bg-gray-100">
-          <TouchableOpacity className="me-5">
-            <Ionicons name="camera" size={26} color="black" />
+        <View className="flex-row items-center space-x-4">
+          <TouchableOpacity className="mr-2">
+            <Ionicons name="camera" size={26} color={AppColors.text.primary} />
           </TouchableOpacity>
 
-          <TouchableOpacity>
-            <Ionicons name="ellipsis-vertical" size={24} color="black" />
+          <TouchableOpacity className="mr-4">
+            <Ionicons name="ellipsis-vertical" size={24} color={AppColors.text.primary} />
           </TouchableOpacity>
         </View>
       ),
@@ -87,64 +86,183 @@ const chatlist=useChatList();
   const filterdChats = chats.filter((chat) => {
     return (
       chat.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-      chat.lastmessage?.toLocaleLowerCase().includes(search.toLowerCase())
+      chat.lastMessage?.toLocaleLowerCase().includes(search.toLowerCase())
     );
   });
 
   const renderItem = ({ item }: any) => (
-    <TouchableOpacity className="flex-row items-center border-gray-400 bg-green-50 "
-    onPress={()=>{
-
-      navigation.navigate("SingelChatScreen",{
-        chatId:1,
-        friendName:"Anjaa",
-        lastSeenTime:"8:PM",
-        profileImage:require("../../assets/avatar/avatar_2.png"),
-      });
-    }}
+    <TouchableOpacity
+      style={{
+        backgroundColor: AppColors.input.background,
+        borderRadius: 20,
+        marginHorizontal: 16,
+        marginVertical: 6,
+        padding: 12,
+        shadowColor: AppColors.shadow.light,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 3,
+      }}
+      onPress={() => {
+        navigation.navigate("SingelChatScreen", {
+          chatId: 1,
+          friendName: "Anjaa",
+          lastSeenTime: "8:PM",
+          profileImage: require("../../assets/avatar/avatar_2.png"),
+        });
+      }}
+      activeOpacity={0.7}
     >
-      <Image source={item.profile} className="w-20 h-20 rounded-full" />
-     <View className="flex-1">
-         <View className="flex-row justify-between">
-        <Text className="text-xl font-bold text-gray-600">{item.name}</Text>
-        <Text className="text-xl font-bold text-gray-600">{item.time}</Text>
+      <View className="flex-row items-center">
+        <Image 
+          source={item.profile} 
+          style={{
+            width: 60,
+            height: 60,
+            borderRadius: 30,
+            borderWidth: 2,
+            borderColor: AppColors.input.border,
+          }}
+        />
+        <View className="flex-1 ml-3">
+          <View className="flex-row items-center justify-between mb-1">
+            <Text 
+              className="text-lg font-bold"
+              style={{ color: AppColors.text.primary }}
+            >
+              {item.name}
+            </Text>
+            <Text 
+              className="text-xs font-medium"
+              style={{ color: AppColors.text.secondary }}
+            >
+              {item.time}
+            </Text>
+          </View>
+          <View className="flex-row items-center justify-between">
+            <Text 
+              className="flex-1 text-sm"
+              style={{ color: AppColors.text.secondary }}
+              numberOfLines={1}
+            >
+              {item.lastMessage}
+            </Text>
+            {item.unread > 0 && (
+              <View 
+                style={{
+                  backgroundColor: AppColors.button.primaryBg,
+                  borderRadius: 12,
+                  width: 24,
+                  height: 24,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginLeft: 8,
+                }}
+              >
+                <Text 
+                  className="text-xs font-bold"
+                  style={{ color: AppColors.button.primaryText }}
+                >
+                  {item.unread}
+                </Text>
+              </View>
+            )}
+          </View>
+        </View>
       </View>
-       {/* 👇 **MAIN UPDATE:** Correctly styled Unread Badge 👇 */}
-          {item.unread > 0 && (
-            <View className="items-center justify-center w-5 h-5 bg-green-500 rounded-full">
-              <Text className="text-xs font-bold text-white">
-                {item.unread}
-              </Text>
-            </View>
-          )}
-          <Text>{item.lastmessage}</Text>
-          {/* 👆 **MAIN UPDATE:** Correctly styled Unread Badge 👆 */}
-     </View>
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView className="flex-1  mt-[-17] bg-red-50 p-0">
-      {/* <StatusBar hidden={false}/> */}
-      <View className=" mt-[-5] flex-row items-center mx-2 bg-300 rounded-full px-3 h-14">
-        <Ionicons name="search" size={32} color="black" />
-        <TextInput
-          className="flex-1 text-base"
-          placeholder="Search"
-          value={search}
-          onChangeText={(text) => setSearch(text)}
+    <View className="flex-1">
+      <StatusBar hidden={false} />
+      
+      {/* Gradient Background */}
+      <LinearGradient
+        colors={[
+          AppColors.background.gradient1,
+          AppColors.background.gradient2,
+          AppColors.background.gradient3,
+        ]}
+        style={{ position: 'absolute', width: '100%', height: '100%' }}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      />
+
+      <SafeAreaView className="flex-1">
+        {/* Search Bar */}
+        <View 
+          style={{
+            backgroundColor: AppColors.input.background,
+            borderRadius: 25,
+            marginHorizontal: 16,
+            marginTop: 8,
+            marginBottom: 12,
+            paddingHorizontal: 16,
+            height: 50,
+            flexDirection: 'row',
+            alignItems: 'center',
+            shadowColor: AppColors.shadow.light,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.2,
+            shadowRadius: 8,
+            elevation: 3,
+            borderWidth: 2,
+            borderColor: AppColors.input.border,
+          }}
+        >
+          <Ionicons name="search" size={24} color={AppColors.text.secondary} />
+          <TextInput
+            className="flex-1 ml-2 text-base"
+            style={{ color: AppColors.input.text }}
+            placeholder="Search"
+            placeholderTextColor={AppColors.input.placeholder}
+            value={search}
+            onChangeText={(text) => setSearch(text)}
+          />
+        </View>
+
+        {/* Chat List */}
+        <FlatList 
+          data={filterdChats} 
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={{ paddingBottom: 100, paddingTop: 4 }}
+          showsVerticalScrollIndicator={false}
         />
-      </View>
-      <View className="mt-1">
-        <FlatList data={filterdChats} renderItem={renderItem} 
-        contentContainerStyle={{paddingBottom:80}}
-        />
-      </View>
-      <View className="absolute w-20 h-20 bg-green-500 bottom-18 right-12 rounded-3xl">
-        <TouchableOpacity className="items-center justify-center w-20 h-20 rounded-3xl">
-          <Ionicons name="chatbox-ellipses" size={26} color="black" />
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+
+        {/* Floating Action Button */}
+        <View 
+          style={{
+            position: 'absolute',
+            bottom: 80,
+            right: 20,
+            width: 64,
+            height: 64,
+            borderRadius: 32,
+            backgroundColor: AppColors.button.primaryBg,
+            justifyContent: 'center',
+            alignItems: 'center',
+            shadowColor: AppColors.shadow.colored,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.4,
+            shadowRadius: 12,
+            elevation: 8,
+          }}
+        >
+          <TouchableOpacity 
+            className="items-center justify-center w-full h-full"
+            activeOpacity={0.8}
+          >
+            <Ionicons 
+              name="chatbox-ellipses" 
+              size={28} 
+              color={AppColors.button.primaryText} 
+            />
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </View>
   );
 }

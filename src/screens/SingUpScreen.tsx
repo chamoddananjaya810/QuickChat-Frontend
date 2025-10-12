@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import {
   Image,
   KeyboardAvoidingView,
@@ -32,8 +31,8 @@ export default function SingUpScreen() {
 
   const logo =
     applied === "dark"
-      ? require("../../assets/logo.png")
-      : require("../../assets/logo.png");
+      ? require("../../assets/quick.png")
+      : require("../../assets/quick.png");
 
   const { userData, setUserData } = useUserRegistaion();
 
@@ -50,11 +49,12 @@ export default function SingUpScreen() {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "android" ? 100 : 100}
+        behavior={Platform.OS === "ios" ? "padding" : "padding"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
         className="flex-1"
+        style={{ flex: 1 }}
       >
-        <SafeAreaView className="flex-1 p-5">
+        <SafeAreaView className="flex-1 p-5" style={{ flex: 1 }}>
           {/* Logo */}
           <View className="items-center mb-6">
             <Image source={logo} className="w-32 h-28" resizeMode="contain" />
@@ -66,7 +66,7 @@ export default function SingUpScreen() {
               className="text-3xl font-extrabold"
               style={{ color: '#334155' }}
             >
-              Create Account
+              Create New Account
             </Text>
             <Text 
               className="mt-2 text-base"
@@ -76,8 +76,8 @@ export default function SingUpScreen() {
             </Text>
           </View>
 
-          {/* Input Fields */}
-          <View className="flex-1">
+          {/* Input Fields - ScrollView එකක් දාලා */}
+          <View style={{ flex: 1 }}>
             {/* First Name Input */}
             <View className="mb-4">
               <FloatingLabelInput
@@ -96,7 +96,8 @@ export default function SingUpScreen() {
                   borderColor: '#e2e8f0',
                   borderRadius: 16,
                   paddingHorizontal: 16,
-                  paddingVertical: 12,
+                  paddingVertical: 16,
+                  width: '100%',
                   shadowColor: 'rgba(0, 0, 0, 0.05)',
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 1,
@@ -107,10 +108,12 @@ export default function SingUpScreen() {
                   color: '#334155',
                   fontSize: 16,
                   fontWeight: '500',
+                  width: '100%',
                 }}
                 labelStyles={{ 
                   color: '#94a3b8',
                   fontSize: 14,
+                  width: '100%',
                 }}
                 customLabelStyles={{
                   colorFocused: '#3b82f6',
@@ -120,7 +123,7 @@ export default function SingUpScreen() {
             </View>
 
             {/* Last Name Input */}
-            <View className="mb-4">
+            <View className="mb-8">
               <FloatingLabelInput
                 label="Last Name"
                 maxLength={200}
@@ -137,7 +140,8 @@ export default function SingUpScreen() {
                   borderColor: '#e2e8f0',
                   borderRadius: 16,
                   paddingHorizontal: 16,
-                  paddingVertical: 12,
+                  paddingVertical: 16,
+                  width: '100%',
                   shadowColor: 'rgba(0, 0, 0, 0.05)',
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 1,
@@ -148,10 +152,12 @@ export default function SingUpScreen() {
                   color: '#334155',
                   fontSize: 16,
                   fontWeight: '500',
+                  width: '100%',
                 }}
                 labelStyles={{ 
                   color: '#94a3b8',
                   fontSize: 14,
+                  width: '100%',
                 }}
                 customLabelStyles={{
                   colorFocused: '#3b82f6',
@@ -161,13 +167,15 @@ export default function SingUpScreen() {
             </View>
           </View>
 
-          {/* Next Button */}
-          <View className="pb-5">
+          {/* Next Button - FIXED VERSION */}
+          <View className="pb-5" style={{ marginTop: 24 }}>
             <Pressable
-              className="items-center justify-center h-14"
+              className="items-center justify-center" 
               style={{
                 backgroundColor: '#3b82f6',
                 borderRadius: 16,
+                paddingVertical: 14,
+                paddingHorizontal: 20,
                 shadowColor: 'rgba(59, 130, 246, 0.3)',
                 shadowOffset: { width: 0, height: 4 },
                 shadowOpacity: 1,
@@ -179,13 +187,13 @@ export default function SingUpScreen() {
                 let validateLast = validateLastName(userData.lastName);
                 if (validateFirst) {
                   Toast.show({
-                    type: ALERT_TYPE.WARNING,
+                    type: ALERT_TYPE.INFO,
                     title: "Warning",
                     textBody: "Please enter a valid first name",
                   });
                 } else if (validateLast) {
                   Toast.show({
-                    type: ALERT_TYPE.WARNING,
+                    type: ALERT_TYPE.INFO,
                     title: "Warning",
                     textBody: "Please enter a valid last name",
                   });
@@ -196,8 +204,12 @@ export default function SingUpScreen() {
               android_ripple={{ color: '#2563eb' }}
             >
               <Text 
-                className="text-xl font-bold"
-                style={{ color: '#ffffff' }}
+                style={{ 
+                  color: '#ffffff',
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  lineHeight: 24,
+                }}
               >
                 Next
               </Text>
@@ -207,20 +219,4 @@ export default function SingUpScreen() {
       </KeyboardAvoidingView>
     </View>
   );
-=======
-import { Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-export default function  SingUpScreen(){
-return (
-
-
-    <SafeAreaView>
-        <Text>singup screen</Text>
-    </SafeAreaView>
-);
-
-
-
->>>>>>> 853a62c1ccf16ba9c270e8f28a69449a506fc02f
 }
