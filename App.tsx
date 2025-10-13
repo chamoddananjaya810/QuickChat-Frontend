@@ -21,6 +21,7 @@ import HomeTabs from "./src/screens/HomeTabs";
 
 import { WebSocketProvider } from "./src/socket/WebSocketProvider";
 import SingelChatScreen from "./src/screens/SingleChatScreen";
+// import ContactAccessScreen from "./src/screens/ContactAccessScreen";
 
 
 
@@ -28,7 +29,7 @@ import SingelChatScreen from "./src/screens/SingleChatScreen";
 export type RootStack = {
   SplashScreen: undefined;
   SingUpScreen: undefined;
-
+ContactAccessScreen:undefined;
   ContactScreen: undefined;
   AvatarScreen: undefined;
   SignInScreen: undefined;
@@ -45,14 +46,14 @@ export type RootStack = {
 const Stack = createNativeStackNavigator<RootStack>(); 
 
 export default function App() {
-  const USER_ID=8;
+  const USER_ID=1;
   return (
     <AlertNotificationRoot>
       <WebSocketProvider userId={USER_ID}>
       <ThemeProvider>
         <UserRegistationProvider>
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="SplashScreen">
+            <Stack.Navigator initialRouteName="HomeScreen">
               <Stack.Screen
                 name="SplashScreen"
                 component={SplashScreen}
@@ -83,6 +84,11 @@ export default function App() {
                 component={HomeTabs}
                 options={{ headerShown: false }}
               />
+                 {/* <Stack.Screen
+                name="ContactAccessScreen"
+                component={ContactAccessScreen}
+                options={{ headerShown: false }}
+              /> */}
               {/* <Stack.Screen name="ProfileScreen" component={ProfileScreen} /> */}
               <Stack.Screen name="SettingScreen" component={SettingScreen} />
               <Stack.Screen

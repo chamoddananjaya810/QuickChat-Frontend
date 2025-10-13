@@ -61,7 +61,7 @@ export default function HomeScreen() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "ChatApp",
+      title: "quick-chat",
       headerTitleStyle: { 
         fontWeight: "bold",
         color: AppColors.text.primary,
