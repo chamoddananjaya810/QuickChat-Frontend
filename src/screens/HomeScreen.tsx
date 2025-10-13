@@ -254,6 +254,7 @@ export default function HomeScreen() {
           <TouchableOpacity 
             className="items-center justify-center w-full h-full"
             activeOpacity={0.8}
+            onPress={() => navigation.navigate("NewChatScreen")} 
           >
             <Ionicons 
               name="chatbox-ellipses" 

@@ -7,6 +7,14 @@ export  interface User{
     profileImage?:string;
 }
 
+export  interface  Friend{
+    id:number;
+    nickName:string;
+    countryCode:string;
+    contactNo:string;
+
+}
+
 export interface Chat{
 
     id:number;
