@@ -70,7 +70,7 @@ export default function NewChatScreen() {
   // Function to handle saving the new contact
   const handleSaveContact = async () => {
     // --- Input Validation ---
-    if (!nickName.trim()) {
+    if (!nickName.trim() ) {
       Toast.show({
         type: ALERT_TYPE.WARNING,
         title: "Nickname Required",
@@ -85,6 +85,7 @@ export default function NewChatScreen() {
         textBody: "Please enter a valid phone number.",
       });
       return;
+
     }
 
     const newFriend: Friend = {
@@ -144,101 +145,105 @@ export default function NewChatScreen() {
         style={styles.flexOne}
       >
         <SafeAreaView style={styles.flexOne}>
-            <ScrollView
-                style={styles.flexOne}
-                contentContainerStyle={styles.scrollContainer}
-                showsVerticalScrollIndicator={false}
-                keyboardShouldPersistTaps="handled"
-            >
-                {/* Wrapper for top and middle content */}
-                <View>
-                    <Text style={styles.title}> Add New Contact </Text>
-                    {/* Nickname Input */}
-                    <View style={[styles.inputContainer, { marginBottom: 16 }]}>
-                        <Ionicons
-                        name="person-outline"
-                        size={24}
-                        color={AppColors.text.secondary}
-                        style={styles.icon}
-                        />
-                        <TextInput
-                        style={styles.input}
-                        placeholder="Enter Nickname"
-                        placeholderTextColor={AppColors.input.placeholder}
-                        value={nickName}
-                        onChangeText={setNickName}
-                        />
-                    </View>
+          <ScrollView
+            style={styles.flexOne}
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
+            {/* Wrapper for top and middle content */}
+            <View>
+              <Text style={styles.title}> Add New Contact </Text>
+              {/* Nickname Input */}
+              <View style={[styles.inputContainer, { marginBottom: 16 }]}>
+                <Ionicons
+                  name="person-outline"
+                  size={24}
+                  color={AppColors.text.secondary}
+                  style={styles.icon}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter Nickname"
+                  placeholderTextColor={AppColors.input.placeholder}
+                  value={nickName}
+                  onChangeText={setNickName}
+                />
+              </View>
 
-                    {/* Country Picker Button */}
-                    <Pressable
-                        onPress={() => setShowPicker(true)}
-                        style={[styles.inputContainer, styles.countryPickerButton, { marginBottom: 16 }]}
-                    >
-                        <Text style={styles.countryText}>
-                        {country?.flag ? String(country.flag) : "🇱🇰"}{" "}
-                        {country?.name ? String(country.name) : "Sri Lanka"}
-                        </Text>
-                        <Ionicons
-                        name="caret-down"
-                        size={16}
-                        color={AppColors.text.primary}
-                        />
-                    </Pressable>
+              {/* Country Picker Button */}
+              <Pressable
+                onPress={() => setShowPicker(true)}
+                style={[
+                  styles.inputContainer,
+                  styles.countryPickerButton,
+                  { marginBottom: 16 },
+                ]}
+              >
+                <Text style={styles.countryText}>
+                  {country?.flag ? String(country.flag) : "🇱🇰"}{" "}
+                  {country?.name ? String(country.name) : "Sri Lanka"}
+                </Text>
+                <Ionicons
+                  name="caret-down"
+                  size={16}
+                  color={AppColors.text.primary}
+                />
+              </Pressable>
 
-                    <CountryPicker
-                        countryCode={(country?.cca2 as CountryCode) || "LK"}
-                        withFilter
-                        withFlag
-                        withCallingCode
-                        visible={showPicker}
-                        onClose={() => setShowPicker(false)}
-                        onSelect={(c) => {
-                        const selectedCallingCode = Array.isArray(c.callingCode)
-                            ? c.callingCode[0]
-                            : c.callingCode;
-                        setCountry(c);
-                        setCallingCode(`+${selectedCallingCode}`);
-                        setShowPicker(false);
-                        }}
-                    />
+              <CountryPicker
+                countryCode={(country?.cca2 as CountryCode) || "LK"}
+                withFilter
+                withFlag
+                withCallingCode
+                visible={showPicker}
+                onClose={() => setShowPicker(false)}
+                onSelect={(c) => {
+                  const selectedCallingCode = Array.isArray(c.callingCode)
+                    ? c.callingCode[0]
+                    : c.callingCode;
+                  setCountry(c);
+                  setCallingCode(`+${selectedCallingCode}`);
+                  setShowPicker(false);
+                }}
+              />
 
-                    {/* Phone Number Inputs */}
-                    <View style={styles.phoneRow}>
-                        <TextInput
-                        style={[styles.inputContainer, styles.callingCodeInput]}
-                        value={callingCode}
-                        editable={false}
-                        />
-                        <TextInput
-                        style={[styles.inputContainer, styles.phoneInput]}
-                        placeholder="77 123 4567"
-                        placeholderTextColor={AppColors.input.placeholder}
-                        keyboardType="phone-pad"
-                        value={phoneNo}
-                        onChangeText={setPhoneNo}
-                        />
-                    </View>
-                </View>
+              {/* Phone Number Inputs */}
+              <View style={styles.phoneRow}>
+                <TextInput
+                  style={[styles.inputContainer, styles.callingCodeInput]}
+                  value={callingCode}
+                  editable={false}
+                />
+                <TextInput
+                  style={[styles.inputContainer, styles.phoneInput]}
+                  placeholder="77 123 4567"
+                  placeholderTextColor={AppColors.input.placeholder}
+                  keyboardType="phone-pad"
+                  value={phoneNo}
+                  onChangeText={setPhoneNo}
+                />
+              </View>
+            </View>
 
-                {/* Save Button Container */}
-                <View style={styles.buttonContainer}>
-                    <Pressable
-                        disabled={loading}
-                        style={[styles.saveButton, { opacity: loading ? 0.7 : 1 }]}
-                        onPress={handleSaveContact}
-                        android_ripple={{ color: AppColors.button.primaryHover }}
-                    >
-                        {loading ? (
-                        <ActivityIndicator
-                            size="small"
-                            color={AppColors.button.primaryText}
-                        />
-                        ) : (
-                        <Text style={styles.saveButtonText}>Save Contact</Text>
-                        )}
-                    </Pressable>
-                </View>
+            {/* Save Button Container */}
+            <View style={styles.buttonContainer}>
+              <Pressable
+                disabled={loading}
+                style={[styles.saveButton, { opacity: loading ? 0.7 : 1 }]}
+                onPress={handleSaveContact}
+                android_ripple={{ color: AppColors.button.primaryHover }}
+              >
+                {loading ? (
+                  <ActivityIndicator
+                    size="small"
+                    color={AppColors.button.primaryText}
+                  />
+                ) : (
+                  <Text style={styles.saveButtonText}>Save Contact</Text>
+                )}
+              </Pressable>
+            </View>
           </ScrollView>
         </SafeAreaView>
       </KeyboardAvoidingView>
@@ -252,7 +257,7 @@ const styles = StyleSheet.create({
   gradient: { position: "absolute", width: "100%", height: "100%" },
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     paddingHorizontal: 20,
   },
   title: {
@@ -260,7 +265,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: AppColors.text.primary,
     marginVertical: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   inputContainer: {
     backgroundColor: AppColors.input.background,
@@ -279,7 +284,12 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   icon: { marginRight: 10 },
-  input: { flex: 1, color: AppColors.input.text, fontSize: 16, fontWeight: '500' },
+  input: {
+    flex: 1,
+    color: AppColors.input.text,
+    fontSize: 16,
+    fontWeight: "500",
+  },
   countryPickerButton: { justifyContent: "space-between" },
   countryText: {
     color: AppColors.text.primary,
@@ -291,8 +301,8 @@ const styles = StyleSheet.create({
     width: "30%",
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
-    justifyContent: 'center',
-    textAlign: 'center',
+    justifyContent: "center",
+    textAlign: "center",
   },
   phoneInput: {
     width: "70%",
@@ -320,4 +330,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-

@@ -121,7 +121,7 @@ export default function SplashScreen() {
 
     // Navigate after animation
     const timer = setTimeout(() => {
-      navigation.replace("SingUpScreen");
+      navigation.replace("SignInScreen");
     }, 3500);
 
     return () => clearTimeout(timer);
@@ -246,26 +246,7 @@ export default function SplashScreen() {
           />
         </View>
 
-        {/* Text Section */}
-        <Animated.View
-          className="absolute items-center w-full"
-          style={[{ bottom: 120 }, textAnimatedStyle]}
-        >
-          <Text className="text-5xl font-extrabold text-center text-slate-700">
-            chat
-          </Text>
-          
-          {/* Decorative underline */}
-          <View
-            style={{
-              width: 60,
-              height: 4,
-              backgroundColor: '#3b82f6',
-              borderRadius: 2,
-              marginTop: 12,
-            }}
-          />
-        </Animated.View>
+    
 
         {/* Subtitle */}
         <Animated.View

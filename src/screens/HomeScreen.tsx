@@ -24,7 +24,7 @@ const chats = [
     lastMessage: "hello,Sahan",
     time: "9:46",
     unread: 2,
-    profile: require("../../assets/avatar/avatar_2.png"),
+    profile: require("../../assets/avatar/new2.jpg"),
   },
   {
     id: 2,
@@ -32,7 +32,7 @@ const chats = [
     lastMessage: "hello,amal ",
     time: "yesterday",
     unread: 2,
-    profile: require("../../assets/avatar/avatar_4.png"),
+    profile: require("../../assets/avatar/new3.jpg"),
   },
   {
     id: 3,
@@ -40,7 +40,7 @@ const chats = [
     lastMessage: "hello,rashni",
     time: "9:46",
     unread: 2,
-    profile: require("../../assets/avatar/avatar_3.png"),
+    profile: require("../../assets/avatar/new4.jpg"),
   },
   {
     id: 4,
@@ -48,7 +48,7 @@ const chats = [
     lastMessage: "hello,asanki",
     time: "2025/02/22 pm",
     unread: 0,
-    profile: require("../../assets/avatar/avatar_5.png"),
+    profile: require("../../assets/avatar/new5.jpg"),
   },
 ];
 

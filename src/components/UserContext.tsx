@@ -3,6 +3,15 @@ import { createContext, ReactNode, useContext, useState } from "react";
 export interface UserRegistationData{
     firstName:string;
     lastName:string;
+    password:string;
+    contactNo:string;
+    countryCode:string;
+    profileImage:string|null;
+}
+export interface FriendRegistationData{
+    firstName:string;
+    lastName:string;
+    password:string;
     contactNo:string;
     countryCode:string;
     profileImage:string|null;
@@ -24,6 +33,7 @@ export const UserRegistationProvider:React.FC<{children:ReactNode}>=({
 const [userData,setUserData]=useState<UserRegistationData>({
 firstName:"",
 lastName:"",
+password:"",
 contactNo:"",
 countryCode:"",
 profileImage:null,

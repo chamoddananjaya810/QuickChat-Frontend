@@ -59,6 +59,11 @@ export default function App() {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
+                  name="SignInScreen"
+                  component={SignInScreen}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
                   name="SingUpScreen"
                   component={SingUpScreen}
                   options={{ headerShown: false }}
@@ -68,11 +73,7 @@ export default function App() {
                   component={ContactScreen}
                   options={{ headerShown: false }}
                 />
-                <Stack.Screen
-                  name="SignInScreen"
-                  component={SignInScreen}
-                  options={{ headerShown: false }}
-                />
+
                 <Stack.Screen
                   name="AvatarScreen"
                   component={AvatarScreen}
@@ -84,10 +85,10 @@ export default function App() {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                name="NewChatScreen"
-                component={NewChatScreen}
-                options={{ headerShown: false }}
-              />
+                  name="NewChatScreen"
+                  component={NewChatScreen}
+                  options={{ headerShown: false }}
+                />
                 {/* <Stack.Screen name="ProfileScreen" component={ProfileScreen} /> */}
                 <Stack.Screen name="SettingScreen" component={SettingScreen} />
                 <Stack.Screen

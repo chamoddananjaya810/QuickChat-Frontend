@@ -49,11 +49,11 @@ export default function AvatarScreen() {
   };
 
   const avatars = [
-    require("../../assets/avatar/avatar_2.png"),
-    require("../../assets/avatar/avatar_3.png"),
-    require("../../assets/avatar/avatar_4.png"),
-    require("../../assets/avatar/avatar_5.png"),
-    require("../../assets/avatar/avatar_6.png"),
+    require("../../assets/avatar/new1.webp"),
+    require("../../assets/avatar/new2.jpg"),
+    require("../../assets/avatar/new3.jpg"),
+    require("../../assets/avatar/new4.jpg"),
+    require("../../assets/avatar/new5.jpg"),
   ];
 
   const { userData, setUserData } = useUserRegistaion();

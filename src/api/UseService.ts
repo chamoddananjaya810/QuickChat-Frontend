@@ -10,6 +10,7 @@ export const createNewAccount = async (userData: UserRegistationData) => {
     formData.append("lastName", userData.lastName);
     formData.append("countryCode", userData.countryCode); // ✅ fixed typo ("contryCode")
     formData.append("contactNo", userData.contactNo);
+    formData.append("password", userData.password);
 
     // ✅ Ensure image is properly formatted for React Native
     if (userData.profileImage) {
@@ -30,7 +31,7 @@ export const createNewAccount = async (userData: UserRegistationData) => {
     });
 
     if (!response.ok) {
-      return "❌ Oops! Account creation failed (Network error)";
+      return "Oops! Account creation failed (Network error)";
     }
 
     const json = await response.json();
@@ -38,10 +39,10 @@ export const createNewAccount = async (userData: UserRegistationData) => {
     if (json.status) {
       return json; // ✅ success response
     } else {
-      return json.message || "⚠️ Account creation failed.";
+      return json.message || "Account creation failed.";
     }
   } catch (error) {
     console.error("Account creation error:", error);
-    return "❌ An unexpected error occurred.";
+    return " An unexpected error occurred.";
   }
 };
