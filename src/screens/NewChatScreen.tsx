@@ -23,8 +23,12 @@ import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import { LinearGradient } from "expo-linear-gradient";
 
 // --- Assuming these are your actual imports from your project structure ---
+// Note: These imports must be correctly configured in your project.
 import { AppColors } from "../../theme/colors"; // Real import
 import { RootStack } from "../../App"; // Real import
+import { addNewFriend } from "../api/FriendService";
+import { useFriendRegistaion, FriendRegistationData } from "../components/friendContext"; // Added FriendRegistationData import
+import { validateFriendName } from "../util/Validation"; // Keeping import, but logic changed for stability
 
 // --- End of assumed imports ---
 
@@ -32,12 +36,6 @@ import { RootStack } from "../../App"; // Real import
 type NewChatScreenProps = NativeStackNavigationProp<RootStack, "NewChatScreen">;
 
 // Interface for the friend data object
-export interface Friend {
-  id?: number;
-  nickName: string;
-  countryCode: string;
-  contactNo: string;
-}
 
 // Extend Country type from the picker library for better state management
 interface ExtendedCountry extends Country {
@@ -47,9 +45,11 @@ interface ExtendedCountry extends Country {
 
 export default function NewChatScreen() {
   const navigation = useNavigation<NewChatScreenProps>();
+  // Context state must be initialized here
+  const { friendData, setFriendData } = useFriendRegistaion();
 
   // State for form inputs
-  const [nickName, setNickName] = useState("");
+
   const [country, setCountry] = useState<ExtendedCountry | null>(null);
   const [callingCode, setCallingCode] = useState("+94");
   const [phoneNo, setPhoneNo] = useState("");
@@ -69,8 +69,13 @@ export default function NewChatScreen() {
 
   // Function to handle saving the new contact
   const handleSaveContact = async () => {
+    // FIX 1: Get the nickname directly from context and trim for reliable validation.
+    // This replaces the unreliable call to validateFriendName for field value.
+    let trimmedNickName = friendData.nickName.trim();
+    
     // --- Input Validation ---
-    if (!nickName.trim() ) {
+    // FIX 2: Check if the reliably trimmed nickname is empty
+    if (!trimmedNickName) {
       Toast.show({
         type: ALERT_TYPE.WARNING,
         title: "Nickname Required",
@@ -85,27 +90,31 @@ export default function NewChatScreen() {
         textBody: "Please enter a valid phone number.",
       });
       return;
-
     }
 
-    const newFriend: Friend = {
-      nickName: nickName,
-      countryCode: callingCode,
-      contactNo: phoneNo,
+    // --- FIX 3: Create the complete data object from context and local states ---
+    const finalFriendData: FriendRegistationData = {
+        nickName: trimmedNickName, // Use the reliable trimmed nickname
+        contactNo: phoneNo.trim(),
+        countryCode: callingCode.trim(),
     };
+    
+    // Update Context state (optional, but keeps the context synchronized)
+    setFriendData(finalFriendData);
 
     try {
       setLoading(true);
-      // Call the service to add the friend
-      const response = await addNewFriend(newFriend);
+      // FIX 4: Use the complete finalFriendData object for the API call
+      const response = await addNewFriend(finalFriendData); 
 
       if (response.status) {
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Contact Saved!",
-          textBody: `${nickName} has been added successfully.`,
+          textBody: `${trimmedNickName} has been added successfully.`, // Use trimmedNickName
         });
         navigation.goBack(); // Go back to the previous screen on success
+       navigation.navigate("HomeScreen");
       } else {
         Toast.show({
           type: ALERT_TYPE.WARNING,
@@ -124,6 +133,7 @@ export default function NewChatScreen() {
       setLoading(false);
     }
   };
+
 
   return (
     <View style={styles.flexOne}>
@@ -166,8 +176,13 @@ export default function NewChatScreen() {
                   style={styles.input}
                   placeholder="Enter Nickname"
                   placeholderTextColor={AppColors.input.placeholder}
-                  value={nickName}
-                  onChangeText={setNickName}
+                  value={friendData.nickName}
+                  onChangeText={(text) => {
+                    setFriendData((previous) => ({
+                      ...previous,
+                      nickName: text,
+                    }));
+                  }}
                 />
               </View>
 
@@ -221,7 +236,9 @@ export default function NewChatScreen() {
                   placeholderTextColor={AppColors.input.placeholder}
                   keyboardType="phone-pad"
                   value={phoneNo}
-                  onChangeText={setPhoneNo}
+                  onChangeText={(text) => {
+                    setPhoneNo(text);
+                  }}
                 />
               </View>
             </View>

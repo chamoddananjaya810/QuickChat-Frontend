@@ -37,7 +37,7 @@ export const createNewAccount = async (userData: UserRegistationData) => {
     const json = await response.json();
 
     if (json.status) {
-      return json; // ✅ success response
+      return json;
     } else {
       return json.message || "Account creation failed.";
     }

@@ -22,6 +22,7 @@ import HomeTabs from "./src/screens/HomeTabs";
 import { WebSocketProvider } from "./src/socket/WebSocketProvider";
 import SingelChatScreen from "./src/screens/SingleChatScreen";
 import NewChatScreen from "./src/screens/NewChatScreen";
+import { FriendRegistationProvider } from "./src/components/friendContext";
 // import ContactAccessScreen from "./src/screens/ContactAccessScreen";
 
 export type RootStack = {
@@ -51,8 +52,9 @@ export default function App() {
       <WebSocketProvider userId={USER_ID}>
         <ThemeProvider>
           <UserRegistationProvider>
+            <FriendRegistationProvider>
             <NavigationContainer>
-              <Stack.Navigator initialRouteName="NewChatScreen">
+              <Stack.Navigator initialRouteName="HomeScreen">
                 <Stack.Screen
                   name="SplashScreen"
                   component={SplashScreen}
@@ -97,6 +99,7 @@ export default function App() {
                 />
               </Stack.Navigator>
             </NavigationContainer>
+         </FriendRegistationProvider>
           </UserRegistationProvider>
         </ThemeProvider>
       </WebSocketProvider>

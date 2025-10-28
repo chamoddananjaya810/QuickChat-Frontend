@@ -8,14 +8,7 @@ export interface UserRegistationData{
     countryCode:string;
     profileImage:string|null;
 }
-export interface FriendRegistationData{
-    firstName:string;
-    lastName:string;
-    password:string;
-    contactNo:string;
-    countryCode:string;
-    profileImage:string|null;
-}
+
 
 interface UserRegistationContextType{
     userData:UserRegistationData,

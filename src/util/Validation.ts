@@ -6,6 +6,17 @@ return null;
 
 
 };
+export const  validateFriendName=(name:string):string | null=>{
+if (!name || name.trim().length===0) {
+    return "Friend name is reqired";
+}
+return null;
+
+
+};
+
+
+
 
 export const validateLastName=(name:string):string | null =>{
     if (!name || name.trim().length=== 0) {

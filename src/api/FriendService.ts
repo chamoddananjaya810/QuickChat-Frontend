@@ -1,4 +1,7 @@
-import { Friend } from "../screens/NewChatScreen"; // Adjust the path if necessary
+// Adjust the path if necessary
+
+import { FriendRegistationData } from "../components/friendContext";
+
 
 const API = process.env.EXPO_PUBLIC_APP_URL + "/QuickChat-Backend";
 
@@ -7,7 +10,7 @@ const API = process.env.EXPO_PUBLIC_APP_URL + "/QuickChat-Backend";
  * @param friendData The friend object containing nickname, country code, and contact number.
  * @returns A promise that resolves to the server's JSON response.
  */
-export const addNewFriend = async (friendData: Friend) => {
+export const addNewFriend = async (friendData: FriendRegistationData) => {
   try {
     // ✅ Create a new FormData object
     const formData = new FormData();
