@@ -83,7 +83,7 @@ export default function SignInScreen() {
   }, []);
 
   const handleSignIn = () => {
-    // --- Placeholder for Sign In Logic ---
+ 
     console.log("Signing in with:", { callingCode, phoneNo, password });
     navigation.replace("HomeScreen");
   };

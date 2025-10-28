@@ -54,7 +54,7 @@ export default function App() {
           <UserRegistationProvider>
             <FriendRegistationProvider>
             <NavigationContainer>
-              <Stack.Navigator initialRouteName="HomeScreen">
+              <Stack.Navigator initialRouteName="SignInScreen">
                 <Stack.Screen
                   name="SplashScreen"
                   component={SplashScreen}
